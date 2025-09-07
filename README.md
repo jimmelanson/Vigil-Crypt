@@ -124,7 +124,7 @@ fingerprint - you can confirm it, but nobody can reverse-engineer it.
             my $key_hex = encode_base16($key_bytes);
 
             print "Random 32-byte key (hex): $key_hex\n";
-        exit;
+            exit;
             
 
 # OBJECT METHODS
@@ -209,9 +209,9 @@ fingerprint - you can confirm it, but nobody can reverse-engineer it.
 - $obj->verify\_password($input\_pwd, $stored\_hashed\_pwd, $pepper);
 
             if($obj->verify_password($input_pwd, $stored_hashed_pwd, $pepper)) {
-                    ...password challenge was A-OK, do your stuff...
+                ...password challenge was A-OK, do your stuff...
             } else {
-                    ...password challenge failed, go away!...
+                ...password challenge failed, go away!...
             }
             
 
@@ -233,7 +233,7 @@ database tables. The formula to calculate the length of encrypted values is:
 
 Since Perl does not have a ceil() function, we would actually calculate it this way:
 
-    my $Base64_length = 4 * int((($plaintext_bytes + 28) + 2) / 3);
+        my $Base64_length = 4 * int((($plaintext_bytes + 28) + 2) / 3);
 
 Here are some prepresentative values to get you going:
 
@@ -269,7 +269,7 @@ If your host does not allow you to install from CPAN, then you can install this 
 
             #!/usr/bin/perl
             BEGIN {
-                    push(@INC, '/path/on/server/to/Vigil');
+                push(@INC, '/path/on/server/to/Vigil');
             }
             
             use Vigil::Crypt;
