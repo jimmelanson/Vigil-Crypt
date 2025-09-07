@@ -114,9 +114,9 @@ sub hash {
 }
 
 sub verify_hash {
-    my ($self, $new_hash, $stored_hash, $pepper) = @_;
+    my ($self, $user_input, $stored_hash, $pepper) = @_;
     $pepper //= '';
-    return argon2_verify($stored_hash, sha256($new_hash . $pepper));
+    return argon2_verify($stored_hash, sha256($user_input . $pepper));
 }
 
 sub verify_password { return shift->verify_hash(@_); }
@@ -251,8 +251,8 @@ C<Argon2> is used for password hashing because:
 
 The constructor takes one argument and it is mandatory.
 
-	use Vigil::Crypt;
-	my $crypt = Vigil::Crypt->new( ENCRYPTION_KEY );
+        use Vigil::Crypt;
+        my $crypt = Vigil::Crypt->new( ENCRYPTION_KEY );
 	
 The encryption key must be a 64-character string of hexadecimal digits, which corresponds
 to 32 bytes of binary data. This value must be stored somewhere permanent and should never
@@ -262,19 +262,19 @@ which your program can then C<require> to access the key.
 
 Here is a small script that you can run one time to generate a cryptographically secure encryption key:
 
-	use strict;
-	use warnings;
-	use Bytes::Random::Secure qw(random_bytes);
-	use MIME::Base16 qw(encode_base16);
+        use strict;
+        use warnings;
+        use Bytes::Random::Secure qw(random_bytes);
+        use MIME::Base16 qw(encode_base16);
 
-	# Generate 32 random bytes
-	my $key_bytes = random_bytes(32);
+        # Generate 32 random bytes
+        my $key_bytes = random_bytes(32);
 
-	# Convert to hex string (64 characters)
-	my $key_hex = encode_base16($key_bytes);
+        # Convert to hex string (64 characters)
+        my $key_hex = encode_base16($key_bytes);
 
-	print "Random 32-byte key (hex): $key_hex\n";
-    exit;
+        print "Random 32-byte key (hex): $key_hex\n";
+        exit;
 	
 =back
 
@@ -286,13 +286,13 @@ Here is a small script that you can run one time to generate a cryptographically
 
 =item $obj->last_error;
 
-	print $obj->last_error;
+        print $obj->last_error;
 	
 If your attempts to encrypt or decrypt a value fail, then you can print out the contents of this method to see why.
 
 =item $obj->encrypt($value_to_encrypt, $user_specific_value_1, $user_specific_value2);
 
-	my $encrypted_data = $obj->encrypt($plaintext, $userid, $user_account_date);
+        my $encrypted_data = $obj->encrypt($plaintext, $userid, $user_account_date);
 	
 In my time developing things for the web (25+ years now), I've almost always used encryption with sensitive
 user information. This means that there has always been a user profile associated to the encrypted data. For
@@ -322,7 +322,7 @@ This can be in any format: ymd, timestamp, seconds since epoch, etc.
 
 I<In fact, you can use any kind of data you want for these two values, so long as those pieces of data are unique to the user.>
 
-	my $encrypted_data = $obj->encrypt($plaintext, $aad);
+        my $encrypted_data = $obj->encrypt($plaintext, $aad);
 	
 If you have your own AAD, then you can pass that as a single argument.
 
@@ -331,7 +331,7 @@ can't be opened unless the label matches exactly what it was when the box was lo
 to verify the data hasn't been tampered with, without being hidden inside the box itself. If you don't really
 know what AAD is or how to use it, stick with the two pieces of user information as arguments.
 
-	my $encrypted_data = $obj->encrypt($plaintext);
+        my $encrypted_data = $obj->encrypt($plaintext);
 
 You CAN do this but you SHOULD NOT do this. When you pass the data to encrypt with no further arguments, the
 module will generate it's own AAD for that encryption. It will be the same AAD generated for anyone else, though,
@@ -340,7 +340,7 @@ so you really do compromise the security you are trying to enable with encryptio
 	
 =item $obj->decrypt($encrypted_data, $user_specific_value_1, $user_specific_value2);
 
-	my $plaintext = $obj->decrypt($encrypted_data, $userid, $user_account_date);
+        my $plaintext = $obj->decrypt($encrypted_data, $userid, $user_account_date);
 
 In this method, you are returning the encrypted text to plain text. The rules on arguments are the same as well.
 Remember that how you encrypt data (arguments supplied) must be the exact same way you decrypt data (arguments supplied).
@@ -367,11 +367,11 @@ used to encrypt and decrypt data, while the pepper is used to strengthen passwor
 
 =item $obj->verify_password($input_pwd, $stored_hashed_pwd, $pepper);
 
-	if($obj->verify_password($input_pwd, $stored_hashed_pwd, $pepper)) {
-		...password challenge was A-OK, do your stuff...
-	} else {
-		...password challenge failed, go away!...
-	}
+        if($obj->verify_password($input_pwd, $stored_hashed_pwd, $pepper)) {
+            ...password challenge was A-OK, do your stuff...
+        } else {
+            ...password challenge failed, go away!...
+        }
 	
 You need to pass the password being valided, then the password that was hashed and stored
 previously, and the pepper. Remember that the pepper for the original password and the
@@ -389,11 +389,11 @@ markers. Let your imagination run rampant!
 Knowing how long the final encryption will be is important when designing your
 database tables. The formula to calculate the length of encrypted values is:
 
-	my $Base64_length = 4 * ceil(($plaintext_bytes + 28) / 3);
+        my $Base64_length = 4 * ceil(($plaintext_bytes + 28) / 3);
 
 Since Perl does not have a ceil() function, we would actually calculate it this way:
 
-    my $Base64_length = 4 * int((($plaintext_bytes + 28) + 2) / 3);
+        my $Base64_length = 4 * int((($plaintext_bytes + 28) + 2) / 3);
 
 Here are some prepresentative values to get you going:
 
@@ -420,25 +420,25 @@ If your host does not allow you to install from CPAN, then you can install this 
 
 In the same directory as your script, create a subdirectory called "Vigil". Then add these two lines, in this order, to your script:
 
-	use lib '.';           # Add current directory to @INC
-	use Vigil::Crypt;      # Now Perl can find the module in the same dir
+        use lib '.';           # Add current directory to @INC
+        use Vigil::Crypt;      # Now Perl can find the module in the same dir
 	
-	#Then call it as normal:
-	my $crypt = Vigil::Crypt->new( ENCRYPTION_KEY );
+        #Then call it as normal:
+        my $crypt = Vigil::Crypt->new( ENCRYPTION_KEY );
 
 =item * In a different directory
 
 First, create a subdirectory called "Vigil" then add it to C<@INC> array through a C<BEGIN{}> block in your script:
 
-	#!/usr/bin/perl
-	BEGIN {
-		push(@INC, '/path/on/server/to/Vigil');
-	}
+        #!/usr/bin/perl
+        BEGIN {
+            push(@INC, '/path/on/server/to/Vigil');
+        }
 	
-	use Vigil::Crypt;
+        use Vigil::Crypt;
 	
-	#Then call it as normal:
-	my $crypt = Vigil::Crypt->new( ENCRYPTION_KEY );
+        #Then call it as normal:
+        my $crypt = Vigil::Crypt->new( ENCRYPTION_KEY );
 
 =back
 
