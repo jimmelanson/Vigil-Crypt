@@ -8,6 +8,8 @@ use Crypt::AuthEnc::ChaCha20Poly1305;
 use Digest::SHA qw(sha256);
 use Crypt::Argon2 qw(argon2id_pass argon2_verify);
 
+our $VERSION = '1.1.0';
+
 sub new {
     my ($class, $encryption_key) = @_;
     unless(defined $encryption_key && length($encryption_key) == 64) {
