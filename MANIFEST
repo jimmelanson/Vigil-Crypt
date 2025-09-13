@@ -1,0 +1,6 @@
+examples/basic_usage.pl
+lib/Vigil/Crypt.pm
+LICENSE.txt
+README.md
+t/00_compile.t
+t/01_basic.t
