@@ -1,3 +1,5 @@
+use strict;
+use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
@@ -14,4 +16,7 @@ WriteMakefile(
 		'Crypt::Argon2'               => 0
     },
     MIN_PERL_VERSION => '5.10.0',
+    TEST_REQUIRES => {
+          'Test::More'    => 1.001014,
+    },
 );
